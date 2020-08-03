@@ -4,10 +4,13 @@
     android:id="@+id/menu_item_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp"
     android:orientation="vertical"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="@dimen/cardview_default_elevation">
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="4dp">
 
     <TextView
         android:id="@+id/menu_item_name"
@@ -15,7 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:layout_gravity="center"
         android:text="Sample Text"
         android:textColor="@android:color/black"

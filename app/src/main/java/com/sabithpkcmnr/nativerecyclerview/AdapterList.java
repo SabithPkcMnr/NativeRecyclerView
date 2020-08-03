@@ -28,7 +28,7 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (viewType) {
             case 1:
                 View unifiedNativeLayoutView = LayoutInflater.from(
-                        viewGroup.getContext()).inflate(R.layout.item_native_pdf,
+                        viewGroup.getContext()).inflate(R.layout.item_native,
                         viewGroup, false);
                 return new UnifiedNativeAdViewHolder(unifiedNativeLayoutView);
             case 0:
@@ -36,7 +36,7 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             default:
                 View menuItemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.item_list, viewGroup, false);
-                return new MenuItemViewHolder(menuItemLayoutView);
+                return new MyListHolder(menuItemLayoutView);
         }
     }
 
@@ -54,19 +54,19 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 // fall through
 
             default:
-                MenuItemViewHolder menuItemHolder = (MenuItemViewHolder) holder;
-                ModelBase menuItem = (ModelBase) modelBase.get(position);
-                menuItemHolder.menuItemName.setText(menuItem.getName());
+                MyListHolder menuItemHolder = (MyListHolder) holder;
+                ModelList menuItem = (ModelList) modelBase.get(position);
+                menuItemHolder.listItem.setText(menuItem.getName());
         }
     }
 
-    public class MenuItemViewHolder extends RecyclerView.ViewHolder {
+    public class MyListHolder extends RecyclerView.ViewHolder {
 
-        private TextView menuItemName;
+        private TextView listItem;
 
-        MenuItemViewHolder(View view) {
+        MyListHolder(View view) {
             super(view);
-            menuItemName = view.findViewById(R.id.menu_item_name);
+            listItem = view.findViewById(R.id.menu_item_name);
         }
     }
 

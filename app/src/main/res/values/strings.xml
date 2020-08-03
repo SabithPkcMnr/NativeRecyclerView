@@ -1,5 +1,8 @@
 <resources>
+
     <string name="app_name">Native RecyclerView</string>
+
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="ad_unit_id">ca-app-pub-3940256099942544/8135179316</string>
+    <string name="admob_native">ca-app-pub-3940256099942544/1044960115</string>
+
 </resources>

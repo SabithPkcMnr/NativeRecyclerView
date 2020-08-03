@@ -29,17 +29,17 @@ public class ActivityHome extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         myListRv = findViewById(R.id.recycler_view);
-        myListRv.setLayoutManager(new LinearLayoutManager(this));
-
-        for (int a = 0; a < 30; a++) {
-            modelBase.add(new ModelBase("Item: " + a));
-        }
-
         adapterPDFOffline = new AdapterList(modelBase);
+
+        for (int a = 1; a <= 20; a++) {
+            modelBase.add(new ModelList("List Item " + a));
+        }
 
         myListRv.setHasFixedSize(true);
 
         myListRv.setNestedScrollingEnabled(false);
+
+        myListRv.setLayoutManager(new LinearLayoutManager(this));
 
         myListRv.setAdapter(adapterPDFOffline);
 
@@ -60,7 +60,7 @@ public class ActivityHome extends AppCompatActivity {
     }
 
     private void loadNativeAds() {
-        AdLoader.Builder builder = new AdLoader.Builder(this, "ca-app-pub-3940256099942544/8135179316");
+        AdLoader.Builder builder = new AdLoader.Builder(this, getResources().getString(R.string.admob_native));
         adLoader = builder.forUnifiedNativeAd(
                 new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override

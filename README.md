@@ -1,6 +1,6 @@
 # RecyclerView with Native Advanced Video Ads
-An Android app that displays AdMob native video ads in between simple RecyclerView list
-<img src="/screenshot/Native_Video_Ads_RecyclerView_Sabith_Pkc_Mnr.webp">
+An Android app that displays AdMob native video ads in between simple RecyclerView list.
+<img src="/screenshots/native_video_ad_recyclerview_sabith_pkc_mnr_github.webp">
 
 <br>
 Now grab a cup of hot or cold coffee☕ and let's get started. Feel free to give a star, fork and play around the list and ads.

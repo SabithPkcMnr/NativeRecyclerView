@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.formats.MediaView;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         viewGroup, false);
                 return new UnifiedNativeAdViewHolder(unifiedNativeLayoutView);
             case 0:
-                // Fall through.
+                //Not really needed code here as we have the default.
             default:
                 View menuItemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.item_list, viewGroup, false);
@@ -51,22 +53,13 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
 
             case 0:
-                // fall through
+                //Not really needed code here as we have the default.
 
             default:
                 MyListHolder menuItemHolder = (MyListHolder) holder;
                 ModelList menuItem = (ModelList) modelBase.get(position);
-                menuItemHolder.listItem.setText(menuItem.getName());
-        }
-    }
-
-    public class MyListHolder extends RecyclerView.ViewHolder {
-
-        private TextView listItem;
-
-        MyListHolder(View view) {
-            super(view);
-            listItem = view.findViewById(R.id.menu_item_name);
+                menuItemHolder.itemTitle.setText(menuItem.getTitle());
+                menuItemHolder.itemDescription.setText(menuItem.getDescription());
         }
     }
 
@@ -82,6 +75,42 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return 1;
         }
         return 0;
+    }
+
+    //ViewHolder for List Data
+    public class MyListHolder extends RecyclerView.ViewHolder {
+
+        private TextView itemTitle, itemDescription;
+
+        MyListHolder(View view) {
+            super(view);
+            itemTitle = view.findViewById(R.id.itemTitle);
+            itemDescription = view.findViewById(R.id.itemDescription);
+        }
+    }
+
+    //ViewHolder for Native Ad Data
+    class UnifiedNativeAdViewHolder extends RecyclerView.ViewHolder {
+
+        private UnifiedNativeAdView adView;
+
+        public UnifiedNativeAdView getAdView() {
+            return adView;
+        }
+
+        UnifiedNativeAdViewHolder(View view) {
+            super(view);
+            adView = view.findViewById(R.id.ad_view);
+            adView.setMediaView((MediaView) adView.findViewById(R.id.ad_media));
+            adView.setHeadlineView(adView.findViewById(R.id.ad_headline));
+            adView.setBodyView(adView.findViewById(R.id.ad_body));
+            adView.setCallToActionView(adView.findViewById(R.id.ad_bt_visit));
+            adView.setIconView(adView.findViewById(R.id.ad_icon));
+            adView.setPriceView(adView.findViewById(R.id.ad_price));
+            adView.setStarRatingView(adView.findViewById(R.id.ad_stars));
+            adView.setStoreView(adView.findViewById(R.id.ad_store));
+            adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser));
+        }
     }
 
     private void populateNativeAdView(UnifiedNativeAd nativeAd,

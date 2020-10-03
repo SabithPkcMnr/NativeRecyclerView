@@ -12,16 +12,27 @@
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="4dp">
 
-    <TextView
-        android:id="@+id/menu_item_name"
+    <LinearLayout
+        android:padding="15dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_margin="20dp"
-        android:layout_gravity="center"
-        android:text="Sample Text"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/itemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sample Text"
+            android:textColor="@android:color/black"
+            style="@style/TextAppearance.AppCompat.Medium"/>
+
+        <TextView
+            android:id="@+id/itemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sample Text"
+            style="@style/TextAppearance.AppCompat.Small"/>
+
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

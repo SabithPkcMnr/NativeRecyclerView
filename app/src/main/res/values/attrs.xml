@@ -1,0 +1,5 @@
+<resources>
+  <declare-styleable name="NativeAdTemplate">
+    <attr name="native_ad_layout" format="reference"/>
+  </declare-styleable>
+</resources>

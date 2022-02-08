@@ -1,7 +1,9 @@
 package com.sabithpkcmnr.nativerecyclerview;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,88 +11,92 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.LoadAdError;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ActivityHome extends AppCompatActivity {
 
-    AdLoader adLoader;
-    RecyclerView myListRv;
-    int NUMBER_OF_ADS = 4; //TOTAL ADS
-    int AD_START_POS = 3; //FIRST AD POSITION (Index number, means List position + 1)
+    int adPos;
+    int adTotalCount = 0;
+    boolean isSecondCase;
+    int adCurrentPosition = 0;
+    ArrayList<Object> modelBookList = new ArrayList<>();
+    ArrayList<Integer> adPositionList = new ArrayList<>();
+
+    RecyclerView itemList;
     AdapterList adapterPDFOffline;
-    List<Object> modelBase = new ArrayList<>();
-    List<UnifiedNativeAd> modelAds = new ArrayList<>();
+    ArrayList<Object> modelBase = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().setIcon(R.drawable.ic_home);
 
-        myListRv = findViewById(R.id.recycler_view);
-        adapterPDFOffline = new AdapterList(modelBase);
+        itemList = findViewById(R.id.itemList);
+        adapterPDFOffline = new AdapterList(ActivityHome.this, modelBookList);
 
-        //Adding Data to List - You could also run a for loop to add X number of items
-        modelBase.add(new ModelList("Title One", "Description One"));
-        modelBase.add(new ModelList("Title Two", "Description Two"));
-        modelBase.add(new ModelList("Title Three", "Description Three"));
-        modelBase.add(new ModelList("Title Four", "Description Four"));
-        modelBase.add(new ModelList("Title Five", "Description Five"));
-        modelBase.add(new ModelList("Title Six", "Description Six"));
-        modelBase.add(new ModelList("Title Seven", "Description Seven"));
-        modelBase.add(new ModelList("Title Eight", "Description Eight"));
-        modelBase.add(new ModelList("Title Nine", "Description Nine"));
-        modelBase.add(new ModelList("Title Ten", "Description Ten"));
-        modelBase.add(new ModelList("Title Eleven", "Description Eleven"));
-        modelBase.add(new ModelList("Title Twelve", "Description Twelve"));
-        modelBase.add(new ModelList("Title Thirteen", "Description Thirteen"));
-        modelBase.add(new ModelList("Title Fourteen", "Description Fourteen"));
-        modelBase.add(new ModelList("Title Fifteen", "Description Fifteen"));
+        for (int a = 1; a <= 15; a++) {
+            modelBookList.add(new ModelList("Title " + a, "Description " + a));
+            if (adPos % 5 == 2) {
+                modelBookList.add(new ModelAd());
+                adPositionList.add(modelBookList.size() - 1);
+                adTotalCount++;
+            }
+            adPos++;
+        }
 
-        //myListRv.setHasFixedSize(true);
-        myListRv.setNestedScrollingEnabled(false);
-        myListRv.setLayoutManager(new LinearLayoutManager(this));
-        myListRv.setAdapter(adapterPDFOffline);
+        itemList.setHasFixedSize(true);
+        itemList.setNestedScrollingEnabled(false);
+        itemList.setLayoutManager(new LinearLayoutManager(this));
+        itemList.setAdapter(adapterPDFOffline);
 
         loadNativeAds();
     }
 
-    private void insertAdsInMenuItems() {
-        if (modelAds.size() <= 0) {
-            return;
-        }
-        int offset = (modelBase.size() / modelAds.size()) + 1;
-        int index = AD_START_POS;
-        for (UnifiedNativeAd ad : modelAds) {
-            modelBase.add(index, ad);
-            index = index + offset;
-        }
-        adapterPDFOffline.notifyDataSetChanged();
-    }
-
     private void loadNativeAds() {
-        AdLoader.Builder builder = new AdLoader.Builder(this, getResources().getString(R.string.admob_native));
-        adLoader = builder.forUnifiedNativeAd(
-                new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+        AdLoader adLoader = new AdLoader.Builder(this, getResources().getString(R.string.admob_native))
+                .forNativeAd(new com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener() {
                     @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        modelAds.add(unifiedNativeAd);
-                        if (!adLoader.isLoading()) {
-                            insertAdsInMenuItems();
+                    public void onNativeAdLoaded(com.google.android.gms.ads.nativead.NativeAd nativeAd) {
+                        Log.d("logAdapterCoin", "Native Ad Loaded A");
+
+                        if (isDestroyed()) {
+                            nativeAd.destroy();
+                        }
+
+                        try {
+                            int adListPosition = adPositionList.get(adCurrentPosition);
+                            /*if (isSecondCase) {
+                                adListPosition = adListPosition + additionValue;
+                                additionValue++;
+                            }*/
+                            modelBookList.set(adListPosition, new ModelAd(nativeAd));
+                            adapterPDFOffline.notifyItemChanged(adListPosition);
+                            adCurrentPosition++;
+                            isSecondCase = true;
+                            loadNativeAds();
+
+                        } catch (IndexOutOfBoundsException ignored) {
                         }
                     }
-                }).withAdListener(
-                new AdListener() {
+                }).withAdListener(new AdListener() {
                     @Override
-                    public void onAdFailedToLoad(int errorCode) {
-                        if (!adLoader.isLoading()) {
-                            insertAdsInMenuItems();
-                        }
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        Log.d("logAdapterCoin", "Native Ad Failed A - " + loadAdError.getMessage());
+                        Log.d("logAdapterCoin", "Native Ad Failed B - " + loadAdError.getResponseInfo());
+                        super.onAdFailedToLoad(loadAdError);
                     }
-                }).build();
-        adLoader.loadAds(new AdRequest.Builder().build(), NUMBER_OF_ADS);
+
+                    @Override
+                    public void onAdLoaded() {
+                        Log.d("logAdapterCoin", "Native Ad Loaded");
+                        super.onAdLoaded();
+                    }
+                })
+                .build();
+        adLoader.loadAd(new AdRequest.Builder().build());
     }
 
 }

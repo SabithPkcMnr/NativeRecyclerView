@@ -5,4 +5,10 @@
     <color name="colorPrimaryDark">#7B1FA2</color>
     <color name="colorAccent">#8E24AA</color>
 
+    <color name="colorBackground">#E3E3E3</color>
+    <color name="colorDivider">@android:color/darker_gray</color>
+
+    <color name="colorTextPrimary">@android:color/black</color>
+    <color name="colorTextSecondary">#232323</color>
+
 </resources>

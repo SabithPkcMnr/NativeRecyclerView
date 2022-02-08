@@ -1,66 +1,74 @@
 package com.sabithpkcmnr.nativerecyclerview;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.formats.MediaView;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.sabithpkcmnr.nativerecyclerview.admob.AdMobNativeStyle;
 
-import com.google.android.gms.ads.formats.NativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<Object> modelBase;
-    public AdapterList(List<Object> modelBase) {
+    Activity activity;
+    final ArrayList<Object> modelBase;
+
+    public AdapterList(Activity activity, ArrayList<Object> modelBase) {
         this.modelBase = modelBase;
+        this.activity = activity;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        switch (viewType) {
-            case 1:
-                View unifiedNativeLayoutView = LayoutInflater.from(
-                        viewGroup.getContext()).inflate(R.layout.item_native,
-                        viewGroup, false);
-                return new UnifiedNativeAdViewHolder(unifiedNativeLayoutView);
-            case 0:
-                //Not really needed code here as we have the default.
-            default:
-                View menuItemLayoutView = LayoutInflater.from(viewGroup.getContext()).inflate(
-                        R.layout.item_list, viewGroup, false);
-                return new MyListHolder(menuItemLayoutView);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == 0) {
+            View fbNativeAd = LayoutInflater.from(activity).inflate(R.layout.item_native,
+                    parent, false);
+            return new HolderMediation(fbNativeAd);
         }
+        View menuItemLayoutView = LayoutInflater.from(activity).inflate(R.layout.item_list, parent, false);
+        return new MyListHolder(menuItemLayoutView);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int viewType = getItemViewType(position);
-        switch (viewType) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+        if (modelBase.get(position) instanceof ModelAd) {
+            ModelAd modelAd = (ModelAd) modelBase.get(position);
+            final HolderMediation fbHolder = (HolderMediation) holder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                fbHolder.itemCard.setOutlineAmbientShadowColor(activity.getColor(R.color.colorPrimaryDark));
+                fbHolder.itemCard.setOutlineSpotShadowColor(activity.getColor(R.color.colorPrimaryDark));
+            }
+            if (modelAd.getNativeAd() != null) {
+                AdMobNativeStyle styles = new
+                        AdMobNativeStyle.Builder().build();
+                fbHolder.itemNative.setStyles(styles);
+                fbHolder.itemNative.setNativeAd(modelAd.getNativeAd());
+            }
 
-            case 1:
-                UnifiedNativeAd nativeAd = (UnifiedNativeAd) modelBase.get(position);
-                populateNativeAdView(nativeAd, ((UnifiedNativeAdViewHolder) holder).getAdView());
-                break;
+        } else {
+            MyListHolder menuItemHolder = (MyListHolder) holder;
+            ModelList menuItem = (ModelList) modelBase.get(position);
+            menuItemHolder.itemTitle.setText(menuItem.getTitle());
+            menuItemHolder.itemDescription.setText(menuItem.getDescription());
 
-            case 0:
-                //Not really needed code here as we have the default.
-
-            default:
-                MyListHolder menuItemHolder = (MyListHolder) holder;
-                ModelList menuItem = (ModelList) modelBase.get(position);
-                menuItemHolder.itemTitle.setText(menuItem.getTitle());
-                menuItemHolder.itemDescription.setText(menuItem.getDescription());
+            menuItemHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.startActivity(new Intent(activity, ActivityViewer.class)
+                            .putExtra("title", ((ModelList) modelBase.get(position)).getTitle())
+                            .putExtra("description", ((ModelList) modelBase.get(position)).getDescription()));
+                }
+            });
         }
+
     }
 
     @Override
@@ -70,15 +78,14 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        Object recyclerViewItem = modelBase.get(position);
-        if (recyclerViewItem instanceof UnifiedNativeAd) {
-            return 1;
+        if (modelBase.get(position) instanceof ModelAd) {
+            return 0;
         }
-        return 0;
+        return 1;
     }
 
     //ViewHolder for List Data
-    public class MyListHolder extends RecyclerView.ViewHolder {
+    public static class MyListHolder extends RecyclerView.ViewHolder {
 
         private TextView itemTitle, itemDescription;
 
@@ -89,74 +96,5 @@ public class AdapterList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    //ViewHolder for Native Ad Data
-    class UnifiedNativeAdViewHolder extends RecyclerView.ViewHolder {
 
-        private UnifiedNativeAdView adView;
-
-        public UnifiedNativeAdView getAdView() {
-            return adView;
-        }
-
-        UnifiedNativeAdViewHolder(View view) {
-            super(view);
-            adView = view.findViewById(R.id.ad_view);
-            adView.setMediaView((MediaView) adView.findViewById(R.id.ad_media));
-            adView.setHeadlineView(adView.findViewById(R.id.ad_headline));
-            adView.setBodyView(adView.findViewById(R.id.ad_body));
-            adView.setCallToActionView(adView.findViewById(R.id.ad_bt_visit));
-            adView.setIconView(adView.findViewById(R.id.ad_icon));
-            adView.setPriceView(adView.findViewById(R.id.ad_price));
-            adView.setStarRatingView(adView.findViewById(R.id.ad_stars));
-            adView.setStoreView(adView.findViewById(R.id.ad_store));
-            adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser));
-        }
-    }
-
-    private void populateNativeAdView(UnifiedNativeAd nativeAd,
-                                      UnifiedNativeAdView adView) {
-        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
-        ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
-        ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
-
-        NativeAd.Image icon = nativeAd.getIcon();
-
-        if (icon == null) {
-            adView.getIconView().setVisibility(View.INVISIBLE);
-        } else {
-            ((ImageView) adView.getIconView()).setImageDrawable(icon.getDrawable());
-            adView.getIconView().setVisibility(View.VISIBLE);
-        }
-
-        if (nativeAd.getPrice() == null) {
-            adView.getPriceView().setVisibility(View.INVISIBLE);
-        } else {
-            adView.getPriceView().setVisibility(View.VISIBLE);
-            ((TextView) adView.getPriceView()).setText(nativeAd.getPrice());
-        }
-
-        if (nativeAd.getStore() == null) {
-            adView.getStoreView().setVisibility(View.INVISIBLE);
-        } else {
-            adView.getStoreView().setVisibility(View.VISIBLE);
-            ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
-        }
-
-        if (nativeAd.getStarRating() == null) {
-            adView.getStarRatingView().setVisibility(View.INVISIBLE);
-        } else {
-            ((RatingBar) adView.getStarRatingView())
-                    .setRating(nativeAd.getStarRating().floatValue());
-            adView.getStarRatingView().setVisibility(View.VISIBLE);
-        }
-
-        if (nativeAd.getAdvertiser() == null) {
-            adView.getAdvertiserView().setVisibility(View.INVISIBLE);
-        } else {
-            ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
-            adView.getAdvertiserView().setVisibility(View.VISIBLE);
-        }
-
-        adView.setNativeAd(nativeAd);
-    }
 }

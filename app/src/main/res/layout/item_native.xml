@@ -1,194 +1,24 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/itemCard"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginEnd="10dp">
+    android:orientation="vertical"
+    android:outlineAmbientShadowColor="@color/colorPrimary"
+    android:outlineSpotShadowColor="@color/colorPrimary"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
-    <com.google.android.gms.ads.formats.UnifiedNativeAdView
-        android:id="@+id/ad_view"
+    <com.sabithpkcmnr.nativerecyclerview.admob.AdMobNativeTemplate
+        android:id="@+id/itemNative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:native_ad_layout="@layout/item_native_ad" />
 
-        <LinearLayout
-            android:id="@+id/ad_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/white"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.google.android.gms.ads.formats.MediaView
-                        android:id="@+id/ad_media"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/placeholder_image" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="6dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <RelativeLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp">
-
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/bg_round_outline" />
-
-                                <ImageView
-                                    android:id="@+id/ad_icon"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:background="@drawable/bg_round_outline"
-                                    android:visibility="visible" />
-
-                            </RelativeLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/ad_headline"
-                                    style="@style/TextAppearance.AppCompat.Medium"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:ellipsize="end"
-                                    android:maxLines="1"
-                                    android:singleLine="true"
-                                    android:text="This is test tile of an adview"
-                                    android:textColor="@android:color/black" />
-
-                                <TextView
-                                    android:id="@+id/ad_body"
-                                    style="@style/TextAppearance.AppCompat.Caption"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_marginTop="2dp"
-                                    android:layout_weight="1"
-                                    android:ellipsize="end"
-                                    android:maxLines="2"
-                                    android:text="This is test tile of an adview" />
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/ad_advertiser"
-                                        style="@style/TextAppearance.AppCompat.Caption"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:ellipsize="end"
-                                        android:gravity="start"
-                                        android:maxLines="1"
-                                        android:singleLine="true"
-                                        android:text="This is test tile of an adview"
-                                        android:visibility="visible" />
-
-                                    <RatingBar
-                                        android:id="@+id/ad_stars"
-                                        style="?android:attr/ratingBarStyleSmall"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:isIndicator="true"
-                                        android:numStars="5"
-                                        android:stepSize="0.5"
-                                        android:visibility="gone" />
-
-                                    <TextView
-                                        android:id="@+id/ad_price"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:ellipsize="end"
-                                        android:maxLines="1"
-                                        android:singleLine="true"
-                                        android:text="$12"
-                                        android:textColor="@android:color/black"
-                                        android:textSize="12sp"
-                                        android:visibility="gone" />
-
-                                    <TextView
-                                        android:id="@+id/ad_store"
-                                        style="@style/TextAppearance.AppCompat.Caption"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="2dp"
-                                        android:ellipsize="end"
-                                        android:maxLines="1"
-                                        android:paddingStart="5dp"
-                                        android:paddingLeft="5dp"
-                                        android:paddingEnd="5dp"
-                                        android:paddingRight="5dp"
-                                        android:singleLine="true"
-                                        android:text="Available"
-                                        android:textColor="@android:color/black"
-                                        android:visibility="gone" />
-
-                                    <TextView
-                                        style="@style/TextAppearance.AppCompat.Caption"
-                                        android:layout_width="0dp"
-                                        android:layout_height="0dp"
-                                        android:layout_gravity="center|end"
-                                        android:layout_marginEnd="8dp"
-                                        android:drawableTint="@android:color/black"
-                                        android:gravity="center|end"
-                                        android:paddingTop="10dp"
-                                        android:paddingEnd="10dp"
-                                        android:text="Visit Ad"
-                                        android:textColor="@android:color/black"
-                                        android:textStyle="bold" />
-
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/ad_bt_visit"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:text="Visit Ad" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </com.google.android.gms.ads.formats.UnifiedNativeAdView>
-
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
